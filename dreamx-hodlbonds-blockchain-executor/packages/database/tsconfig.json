@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "outDir": "./dist",
+    // "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "composite": true
+  }
+}

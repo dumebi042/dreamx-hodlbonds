@@ -1,0 +1,43 @@
+{
+  "name": "@hodlbonds-blockchain-executor/intake",
+  "version": "0.4.0",
+  "description": "HodlBonds Blockchain Executor - Intake",
+  "license": "ISC",
+  "author": "Pine Cone",
+  "contributors": [
+    "Nathan Daniels / DreamX"
+  ],
+  "files": [
+    "package.json",
+    "dist/**"
+  ],
+  "type": "module",
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "scripts": {
+    "format": "oxfmt",
+    "lint": "oxlint",
+    "test": "vitest --coverage",
+    "type-check": "tsc --noEmit",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.mjs",
+    "build": "tsdown",
+    "prepare-cloudbuild-template": "node scripts/prepareCloudBuildTemplate.ts"
+  },
+  "dependencies": {
+    "@dreamx-development/hodlbonds-blockchain-executor-database": "workspace:*",
+    "@dreamx-development/hodlbonds-blockchain-executor-dto": "workspace:*",
+    "@google-cloud/functions-framework": "^5.0.1",
+    "drizzle-orm": "catalog:",
+    "log4js": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/ejs": "^3.1.5",
+    "drizzle-seed": "^0.3.1",
+    "ejs": "^4.0.1"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

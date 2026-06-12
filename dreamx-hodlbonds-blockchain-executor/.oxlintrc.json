@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "eslint", "oxc", "node", "vitest", "import", "promise"],
+  "settings": {},
+  "rules": {
+    "eslint/max-lines": "off",
+    "eslint/max-lines-per-function": "off",
+    "import/max-dependencies": "off",
+    "no-inline-comments": "off",
+    // "no-negated-condition": "off"
+  },
+  "categories": { "correctness": "error", "perf": "warn", "pedantic": "warn", "suspicious": "warn" }
+}

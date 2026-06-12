@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    { "path": "./apps/executor" },
+    { "path": "./apps/intake" },
+    { "path": "./packages/database" },
+    { "path": "./packages/dto" },
+    { "path": "./packages/client" }
+  ]
+}

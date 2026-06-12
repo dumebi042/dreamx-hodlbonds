@@ -1,0 +1,29 @@
+{
+  "name": "@hodlbonds-api/env",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./intake": "./src/intake.ts",
+    "./price-oracle": "./src/price-oracle.ts",
+    "./public-api": "./src/public-api.ts",
+    "./server": "./src/server.ts",
+    "./trading-api": "./src/trading-api.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "check-types:tsgo": "tsgo --noEmit",
+    "format": "oxfmt",
+    "lint": "oxlint",
+    "test": "vitest --coverage"
+  },
+  "dependencies": {
+    "@t3-oss/env-core": "^0.13.10",
+    "dotenv": "catalog:",
+    "viem": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@hodlbonds-api/config": "workspace:*"
+  }
+}

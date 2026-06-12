@@ -1,0 +1,26 @@
+
+# Compiler output
+out/
+cache/
+
+# Broadcast logs (ignore local chain & dry-runs)
+broadcast/
+/broadcast/*/31337/
+/broadcast/**/dry-run/
+/broadcast/**/run-latest.json
+
+# Keep placeholder files
+!*/.keep
+
+# Environment configs
+.env
+.env.*
+
+# Node modules (if using JS tools)
+node_modules/
+
+# OS
+.DS_Store
+
+# Editor
+.vscode/

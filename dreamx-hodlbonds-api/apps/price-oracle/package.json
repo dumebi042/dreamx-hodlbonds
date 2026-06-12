@@ -1,0 +1,28 @@
+{
+  "name": "@hodlbonds-api/price-oracle",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsdown",
+    "check-types": "tsc --noEmit",
+    "check-types:tsgo": "tsgo --noEmit",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.mjs",
+    "format": "oxfmt",
+    "lint": "oxlint",
+    "test": "vitest --coverage"
+  },
+  "dependencies": {
+    "@hodlbonds-api/blockchain": "workspace:*",
+    "@hodlbonds-api/db": "workspace:*",
+    "@hodlbonds-api/env": "workspace:*",
+    "drizzle-orm": "catalog:",
+    "viem": "catalog:"
+  },
+  "devDependencies": {
+    "@hodlbonds-api/config": "workspace:*"
+  }
+}

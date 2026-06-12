@@ -1,0 +1,31 @@
+{
+  "serverName": "us-central1",
+  "networkName": "eth-sepolia",
+  "executionManager": {
+    "executorRegion": "US1",
+    "network": "eth",
+    "processQueueDelay": 1000,
+    "defaultRetryDeadline": "1h",
+    "regionRetryBlockDeadline": "25s",
+    "baseRetryInterval": 2,
+    "maxRetryInterval": 3600,
+    "executorConfig": {
+      "minimumGasPrice": "10",
+      "maximumPriorityFeePerGas": "10",
+      "overBidPercent": 110
+    }
+  },
+  "walletManager": {
+    "providerEndpoint": "https://rpc.mockrpc.com",
+    "chainId": 1,
+    "walletCount": 4,
+    "walletOffset": 1,
+    "totalGlobalWalletCount": 4,
+    "processReleasedWalletsDelay": 5000,
+    "connectionCheckDelay": 5000,
+    "refuelDelay": 30000,
+    "refuelAmount": "5",
+    "gasBalanceLowWaterMarkEther": "10",
+    "wallet0GasBalanceLowWaterMarkEther": "30"
+  }
+}

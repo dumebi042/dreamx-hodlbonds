@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "semi": false,
+  // "singleQuote": true,
+  "printWidth": 100,
+  // "trailingComma": "es5",
+  // "arrowParens": "avoid",
+  "experimentalSortImports": { "items": ["<BUILTIN_MODULES>", "<THIRD_PARTY_MODULES>", "", "^@/", "^[.]"] },
+}

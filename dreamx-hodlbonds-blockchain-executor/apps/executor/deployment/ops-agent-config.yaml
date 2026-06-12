@@ -1,0 +1,26 @@
+# Ops Agent configuration for Docker container logs
+# Deploy this to: /etc/google-cloud-ops-agent/config.yaml on GCE instances
+
+logging:
+  receivers:
+    docker_logs:
+      type: files
+      include_paths:
+        # Docker json-file driver writes logs here
+        - /var/lib/docker/containers/*/*-json.log
+
+  processors:
+    # 1. Parse Docker's outer JSON wrapper
+    parse_docker_wrapper:
+      type: parse_json
+
+    # 2. Parse the inner app JSON from the 'log' field
+    parse_app_json:
+      type: parse_json
+      field: log
+
+  service:
+    pipelines:
+      docker_pipeline:
+        receivers: [docker_logs]
+        processors: [parse_docker_wrapper, parse_app_json]

@@ -1,0 +1,23 @@
+services:
+  # Cloud SQL Proxy - Handles ALL database authentication via service account
+  cloud-sql-proxy:
+    image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:latest
+    container_name: cloud-sql-proxy
+    restart: unless-stopped
+    command:
+      - "--address=0.0.0.0"
+      - "--port=5432"
+      - "--auto-iam-authn"
+      - "${CLOUD_SQL_INSTANCE}"
+    healthcheck:
+      test: ["CMD", "/cloud-sql-proxy", "--version"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: gcplogs
+      options:
+        gcp-project: "${GCP_PROJECT_ID}"
+        gcp-log-cmd: "true"
+        labels: "service,environment"
+        env: "ENVIRONMENT"

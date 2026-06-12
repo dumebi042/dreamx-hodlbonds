@@ -1,0 +1,4 @@
+deployment/configs/*.json
+/config
+/secrets
+/logs

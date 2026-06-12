@@ -1,0 +1,39 @@
+name: Publish Packages
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@dreamx-development'
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+      
+      - name: Install dependencies
+        run: pnpm install
+      
+      - name: Build packages
+        run: pnpm build:packages
+      
+      - name: Publish packages
+        run: pnpm publish:packages --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,107 @@
+# Cloud Build configuration for hodlbonds-api price-oracle
+# Triggers on push to stage/main branches
+# Builds Docker image and updates Cloud Run JOB (not service) with Cloud SQL access
+#
+# CHAIN_ID handling:
+# - Each chain has its own Cloud Run Job (e.g., price-oracle-avax-fuji, price-oracle-avax-mainnet)
+# - Jobs are created manually once, then updated by Cloud Build
+# - stage branch → testnet chains (43113 Fuji)
+# - main branch → mainnet chains (43114 Avalanche)
+#
+# To add a new chain: add another job update step below and create the job manually first
+
+steps:
+  # Build Docker image with branch and commit tags
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "build"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/hodlbonds-price-oracle:$BRANCH_NAME"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/hodlbonds-price-oracle:$BRANCH_NAME-$SHORT_SHA"
+      - "-f"
+      - "apps/price-oracle/Dockerfile"
+      - "."
+
+  # Push branch tag
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "push"
+      - "gcr.io/$PROJECT_ID/hodlbonds-price-oracle:$BRANCH_NAME"
+
+  # Push commit-specific tag
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "push"
+      - "gcr.io/$PROJECT_ID/hodlbonds-price-oracle:$BRANCH_NAME-$SHORT_SHA"
+
+  # =============================================================================
+  # TESTNET JOBS (stage branch only)
+  # =============================================================================
+
+  # Update Avalanche Fuji job (chainId: 43113)
+  - name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        if [ "$BRANCH_NAME" = "stage" ]; then
+          gcloud run jobs update price-oracle-avax-fuji \
+            --image=gcr.io/$PROJECT_ID/hodlbonds-price-oracle:$BRANCH_NAME-$SHORT_SHA \
+            --region=us-central1 \
+            --task-timeout=5m \
+            --max-retries=3 \
+            --memory=512Mi \
+            --cpu=1 \
+            --service-account=price-oracle-runtime@$PROJECT_ID.iam.gserviceaccount.com \
+            --add-cloudsql-instances=$PROJECT_ID:us-central1:hodlbonds-api \
+            --set-env-vars=CHAIN_ID=43113 \
+            --set-env-vars=CLOUD_SQL_INSTANCE=$PROJECT_ID:us-central1:hodlbonds-api \
+            --set-env-vars=DB_IAM_USER=price-oracle-runtime@$PROJECT_ID.iam \
+            --set-env-vars=DB_NAME=hodlbonds_api_stage \
+            --set-env-vars=DB_POOL_MAX=2
+        else
+          echo "Skipping Fuji job (not stage branch)"
+        fi
+
+  # =============================================================================
+  # MAINNET JOBS (main branch only)
+  # =============================================================================
+
+  # Update Avalanche Mainnet job (chainId: 43114)
+  - name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        if [ "$BRANCH_NAME" = "main" ]; then
+          gcloud run jobs update price-oracle-avax-mainnet \
+            --image=gcr.io/$PROJECT_ID/hodlbonds-price-oracle:$BRANCH_NAME-$SHORT_SHA \
+            --region=us-central1 \
+            --task-timeout=5m \
+            --max-retries=3 \
+            --memory=512Mi \
+            --cpu=1 \
+            --service-account=price-oracle-runtime@$PROJECT_ID.iam.gserviceaccount.com \
+            --add-cloudsql-instances=$PROJECT_ID:us-central1:hodlbonds-api \
+            --set-env-vars=CHAIN_ID=43114 \
+            --set-env-vars=CLOUD_SQL_INSTANCE=$PROJECT_ID:us-central1:hodlbonds-api \
+            --set-env-vars=DB_IAM_USER=price-oracle-runtime@$PROJECT_ID.iam \
+            --set-env-vars=DB_NAME=hodlbonds_api_main \
+            --set-env-vars=DB_POOL_MAX=2
+        else
+          echo "Skipping Avalanche Mainnet job (not main branch)"
+        fi
+
+# Images to store in Container Registry
+images:
+  - "gcr.io/$PROJECT_ID/hodlbonds-price-oracle:$BRANCH_NAME"
+  - "gcr.io/$PROJECT_ID/hodlbonds-price-oracle:$BRANCH_NAME-$SHORT_SHA"
+
+timeout: "1200s"
+
+# Service account for Cloud Build
+serviceAccount: "projects/$PROJECT_ID/serviceAccounts/hodlbonds-api-deployer@$PROJECT_ID.iam.gserviceaccount.com"
+
+options:
+  logging: CLOUD_LOGGING_ONLY

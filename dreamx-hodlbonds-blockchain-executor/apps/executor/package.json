@@ -1,0 +1,40 @@
+{
+  "name": "@hodlbonds-blockchain-executor/executor",
+  "version": "0.4.0",
+  "description": "HodlBonds Blockchain Executor - Executor",
+  "author": "Pine Cone",
+  "contributors": [
+    "Nathan Daniels / DreamX"
+  ],
+  "files": [
+    "package.json",
+    "dist/**"
+  ],
+  "type": "module",
+  "main": "index.mjs",
+  "module": "index.mjs",
+  "scripts": {
+    "format": "oxfmt",
+    "lint": "oxlint",
+    "test": "vitest --coverage",
+    "type-check": "tsc --noEmit",
+    "build": "tsdown",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.mjs"
+  },
+  "dependencies": {
+    "@dreamx-development/hodlbonds-blockchain-executor-client": "workspace:*",
+    "@dreamx-development/hodlbonds-blockchain-executor-database": "workspace:*",
+    "@dreamx-development/hodlbonds-blockchain-executor-dto": "workspace:*",
+    "@google-cloud/secret-manager": "^6.1.1",
+    "@openzeppelin/merkle-tree": "^1.0.8",
+    "dotenv": "catalog:",
+    "drizzle-orm": "catalog:",
+    "ethers": "^6.16.0",
+    "log4js": "catalog:",
+    "zod": "catalog:"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

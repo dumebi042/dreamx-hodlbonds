@@ -1,0 +1,33 @@
+{
+  "name": "@hodlbonds-api/server",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsdown",
+    "check-types": "tsc --noEmit",
+    "check-types:tsgo": "tsgo --noEmit",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.mjs",
+    "format": "oxfmt",
+    "lint": "oxlint",
+    "test": "vitest --coverage"
+  },
+  "dependencies": {
+    "@faker-js/faker": "catalog:",
+    "@hodlbonds-api/blockchain": "workspace:*",
+    "@hodlbonds-api/db": "workspace:*",
+    "@hodlbonds-api/env": "workspace:*",
+    "@hono/node-server": "catalog:",
+    "@hono/zod-openapi": "catalog:",
+    "dotenv": "catalog:",
+    "hono": "catalog:",
+    "viem": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@hodlbonds-api/config": "workspace:*"
+  }
+}

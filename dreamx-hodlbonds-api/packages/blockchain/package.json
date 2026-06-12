@@ -1,0 +1,25 @@
+{
+  "name": "@hodlbonds-api/blockchain",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "check-types:tsgo": "tsgo --noEmit",
+    "format": "oxfmt",
+    "lint": "oxlint",
+    "test": "vitest --coverage"
+  },
+  "dependencies": {
+    "viem": "catalog:"
+  },
+  "devDependencies": {
+    "@hodlbonds-api/config": "workspace:*"
+  }
+}

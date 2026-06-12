@@ -1,0 +1,39 @@
+{
+  "name": "@hodlbonds-api/trading-api",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsdown",
+    "check-types": "tsc --noEmit",
+    "check-types:tsgo": "tsgo --noEmit",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.mjs",
+    "format": "oxfmt",
+    "lint": "oxlint",
+    "test": "vitest --coverage"
+  },
+  "dependencies": {
+    "@dreamx-development/hodlbonds-blockchain-executor-client": "^0.4.0",
+    "@dreamx-development/hodlbonds-blockchain-executor-dto": "^0.4.0",
+    "@hodlbonds-api/blockchain": "workspace:*",
+    "@hodlbonds-api/db": "workspace:*",
+    "@hodlbonds-api/env": "workspace:*",
+    "@hono/node-server": "catalog:",
+    "@hono/swagger-ui": "^0.5.3",
+    "@hono/zod-openapi": "catalog:",
+    "@openzeppelin/merkle-tree": "^1.0.8",
+    "drizzle-orm": "catalog:",
+    "google-auth-library": "^10.5.0",
+    "hono": "catalog:",
+    "hono-rate-limiter": "^0.5.3",
+    "lru-cache": "^11.2.6",
+    "viem": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@hodlbonds-api/config": "workspace:*"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@dreamx-development/hodlbonds-blockchain-executor-client",
+  "version": "0.4.0",
+  "repository": "https://github.com/DreamX-Development/hodlbonds-blockchain-executor.git",
+  "files": [
+    "package.json",
+    "dist/**"
+  ],
+  "type": "module",
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "format": "oxfmt",
+    "lint": "oxlint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@dreamx-development/hodlbonds-blockchain-executor-dto": "workspace:*",
+    "@google-cloud/pubsub": "^5.2.2",
+    "zod": "catalog:"
+  }
+}

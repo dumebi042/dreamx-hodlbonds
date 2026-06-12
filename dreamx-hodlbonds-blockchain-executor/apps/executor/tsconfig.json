@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "outDir": "./dist",
+    // "rootDir": ".",
+    // "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@dto/*": ["../../packages/dto/src/*"]
+    },
+    "composite": true
+    // "types": ["node"]
+  },
+  // "include": ["src", "tests", "../../packages/dto/src"],
+  "references": [
+    { "path": "../../packages/dto" }
+    // { "path": "./packages/client" }
+  ]
+}

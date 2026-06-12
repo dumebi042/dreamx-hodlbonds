@@ -1,0 +1,332 @@
+{
+  "id": "69b863a8-998c-42fd-99bd-a264117d70cf",
+  "prevId": "48dc52ca-e061-48ae-9835-2d9c82f52bde",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.contracts": {
+      "name": "contracts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "network": {
+          "name": "network",
+          "type": "char(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contract_name": {
+          "name": "contract_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "address": {
+          "name": "address",
+          "type": "char(42)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "abi": {
+          "name": "abi",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "last_updated": {
+          "name": "last_updated",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "contracts_network_contract_name_pk": {
+          "name": "contracts_network_contract_name_pk",
+          "columns": ["network", "contract_name"]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.queue": {
+      "name": "queue",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "priority": {
+          "name": "priority",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "earliest_try": {
+          "name": "earliest_try",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "latest_try": {
+          "name": "latest_try",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "should_retry": {
+          "name": "should_retry",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "network": {
+          "name": "network",
+          "type": "varchar(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "executor": {
+          "name": "executor",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data": {
+          "name": "data",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "task_hash": {
+          "name": "task_hash",
+          "type": "char(40)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status_message": {
+          "name": "status_message",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tx_hashes": {
+          "name": "tx_hashes",
+          "type": "char(66)[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attempts": {
+          "name": "attempts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "next_attempt": {
+          "name": "next_attempt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "previous_attempt_region": {
+          "name": "previous_attempt_region",
+          "type": "executor_region",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gas_price": {
+          "name": "gas_price",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gas_usage": {
+          "name": "gas_usage",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "ix_queue_network_status_priority_earliest_try": {
+          "name": "ix_queue_network_status_priority_earliest_try",
+          "columns": [
+            {
+              "expression": "network",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "priority",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "earliest_try",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ix_queue_task_hash_unique": {
+          "name": "ix_queue_task_hash_unique",
+          "columns": [
+            {
+              "expression": "task_hash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "queue_id_pk": {
+          "name": "queue_id_pk",
+          "columns": ["id"]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.queue_log": {
+      "name": "queue_log",
+      "schema": "",
+      "columns": {
+        "log_id": {
+          "name": "log_id",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "event_type": {
+          "name": "event_type",
+          "type": "log_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "event_time": {
+          "name": "event_time",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "queue_id": {
+          "name": "queue_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "old_row": {
+          "name": "old_row",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "new_row": {
+          "name": "new_row",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "ix_queue_log_queue_id": {
+          "name": "ix_queue_log_queue_id",
+          "columns": [
+            {
+              "expression": "queue_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "queue_log_log_id_pk": {
+          "name": "queue_log_log_id_pk",
+          "columns": ["log_id"]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.executor_region": {
+      "name": "executor_region",
+      "schema": "public",
+      "values": ["EU1", "US1"]
+    },
+    "public.log_type": {
+      "name": "log_type",
+      "schema": "public",
+      "values": ["INSERTED", "UPDATED", "DELETED"]
+    },
+    "public.status": {
+      "name": "status",
+      "schema": "public",
+      "values": ["QUEUED", "EXECUTED", "EXECUTING", "EXCEPTION", "ERROR_RETRY", "ERROR_NO_RETRY"]
+    }
+  },
+  "schemas": {},
+  "views": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

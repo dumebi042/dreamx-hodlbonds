@@ -1,0 +1,1 @@
+ALTER TABLE "queue" ALTER COLUMN "task_hash" SET DATA TYPE char(64);

@@ -1,0 +1,42 @@
+{
+  "name": "@dreamx-development/hodlbonds-blockchain-executor-database",
+  "version": "0.4.0",
+  "description": "HodlBonds Blockchain Executor - Database",
+  "repository": "https://github.com/DreamX-Development/hodlbonds-blockchain-executor.git",
+  "files": [
+    "package.json",
+    "dist/**"
+  ],
+  "type": "module",
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.mts",
+  "exports": {
+    ".": "./dist/index.mjs"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "format": "oxfmt",
+    "lint": "oxlint",
+    "test": "vitest --coverage",
+    "type-check": "tsc --noEmit",
+    "migrate": "drizzle-kit migrate",
+    "generate": "drizzle-kit generate"
+  },
+  "dependencies": {
+    "@google-cloud/cloud-sql-connector": "^1.9.0",
+    "dotenv": "catalog:",
+    "drizzle-orm": "catalog:",
+    "pg": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.16.0",
+    "drizzle-kit": "^0.31.9"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

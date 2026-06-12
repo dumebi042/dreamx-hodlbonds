@@ -1,0 +1,3 @@
+{
+  "extends": "@hodlbonds-api/config/tsconfig.base.json"
+}

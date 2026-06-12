@@ -1,0 +1,20 @@
+# Ignore everything by default
+*
+
+# Include only what Docker needs
+!pnpm-workspace.yaml
+!pnpm-lock.yaml
+!package.json
+!apps/
+!apps/server/**
+!packages/
+!packages/**
+
+# But exclude dev stuff
+apps/server/node_modules
+apps/server/dist
+packages/*/node_modules
+.git
+.DS_Store
+*.log
+.env*

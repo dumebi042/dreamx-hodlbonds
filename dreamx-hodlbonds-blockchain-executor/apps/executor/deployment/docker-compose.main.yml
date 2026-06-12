@@ -1,0 +1,73 @@
+# Mainnet chains for production environment
+
+services:
+  # Ethereum Mainnet
+  # executor-eth-main:
+  #   image: gcr.io/${GCP_PROJECT_ID}/blockchain-executor:main
+  #   container_name: executor-eth-main
+  #   restart: unless-stopped
+  #   stop_grace_period: 90s
+  #   depends_on:
+  #     cloud-sql-proxy:
+  #       condition: service_healthy
+  #   environment:
+  #     ENVIRONMENT: main
+  #     DATABASE_NAME: blockchain_executor_main
+  #     DATABASE_URL: postgres://hodlbonds-executor@${GCP_PROJECT_ID}.iam@cloud-sql-proxy:5432/blockchain_executor_main
+  #     BLOCKCHAIN_EXECUTOR_CONFIG: /app/config/config.json
+  #     SEED_PHRASE_SECRET: executor-seed-phrase
+  #     GCP_PROJECT_ID: ${GCP_PROJECT_ID}
+  #     TRADING_API_STATUS_TOPIC: ${TRADING_API_STATUS_TOPIC_BASE}-main
+  #     NODE_ENV: production
+  #   volumes:
+  #     - ./configs/eth-main-${DEPLOYMENT_REGION}.json:/app/config/config.json:ro
+  #   networks:
+  #     - executor-network
+  #   labels:
+  #     service: "executor"
+  #     environment: "main"
+  #     chain: "eth"
+  #     region: "${DEPLOYMENT_REGION}"
+  #   logging:
+  #     driver: gcplogs
+  #     options:
+  #       gcp-project: "${GCP_PROJECT_ID}"
+  #       gcp-log-cmd: "true"
+  #       labels: "service,environment,chain,region"
+  #       env: "ENVIRONMENT"
+  #       mode: "non-blocking"
+  #       max-buffer-size: "4m"
+
+  # Avalanche C-Chain Mainnet
+  executor-avalanche-main:
+    image: gcr.io/${GCP_PROJECT_ID}/blockchain-executor:main
+    container_name: executor-avalanche-main
+    restart: unless-stopped
+    stop_grace_period: 90s
+    depends_on:
+      cloud-sql-proxy:
+        condition: service_healthy
+    environment:
+      ENVIRONMENT: main
+      DATABASE_NAME: blockchain_executor_main
+      DATABASE_URL: postgres://hodlbonds-executor@${GCP_PROJECT_ID}.iam@cloud-sql-proxy:5432/blockchain_executor_main
+      BLOCKCHAIN_EXECUTOR_CONFIG: /app/config/config.json
+      SEED_PHRASE_SECRET: executor-seed-phrase
+      GCP_PROJECT_ID: ${GCP_PROJECT_ID}
+      TRADING_API_STATUS_TOPIC: ${TRADING_API_STATUS_TOPIC_BASE}-main
+      NODE_ENV: production
+    volumes:
+      - ./configs/avalanche-main-${DEPLOYMENT_REGION}.json:/app/config/config.json:ro
+    labels:
+      service: "executor"
+      environment: "main"
+      chain: "avalanche"
+      region: "${DEPLOYMENT_REGION}"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "2"
+        compress: "true"
+        mode: "non-blocking"
+        max-buffer-size: "4m"

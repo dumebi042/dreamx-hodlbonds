@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    
+    env:
+      BLOCKCHAIN_EXECUTOR_CONFIG: ${{ github.workspace }}/apps/executor/test/__testdata__/test_config.json
+      SEED_PHRASE_SECRET: test-seed-phrase
+      GCP_PROJECT_ID: test-project
+      TRADING_API_STATUS_TOPIC: projects/test-project/topics/test-topic
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/myapp_dev
+      DB_USER: test_user
+      DB_INSTANCE_ID: test_instance
+      DB_NAME: test_name
+      EXECUTOR: UnitTest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Build packages
+        run: pnpm build:packages
+      
+      - name: Type Check
+        run: pnpm type-check
+      
+      - name: Lint
+        run: pnpm lint
+      
+      - name: Start PostgreSQL
+        run: docker compose -f packages/database/docker/docker-compose.yml up -d
+      
+      - name: Wait for PostgreSQL
+        run: |
+          until docker exec myapp-postgres pg_isready -U postgres; do
+            echo "Waiting for postgres..."
+            sleep 1
+          done
+      
+      - name: Run migrations
+        run: pnpm migrate
+      
+      - name: Test
+        run: pnpm test --run

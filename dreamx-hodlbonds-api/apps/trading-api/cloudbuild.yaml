@@ -1,0 +1,85 @@
+# Cloud Build configuration for hodlbonds-api trading-api
+# Triggers on push to stage/main branches
+# Builds Docker image and deploys to Cloud Run
+
+steps:
+  # Build Docker image with branch and commit tags
+  # Uses BuildKit secret mount for secure GitHub Package Registry auth
+  - name: "gcr.io/cloud-builders/docker"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        docker build \
+          --secret id=GITHUB_TOKEN,env=GITHUB_TOKEN \
+          -t gcr.io/$PROJECT_ID/hodlbonds-trading-api:$BRANCH_NAME \
+          -t gcr.io/$PROJECT_ID/hodlbonds-trading-api:$BRANCH_NAME-$SHORT_SHA \
+          -f apps/trading-api/Dockerfile \
+          .
+    secretEnv: ["GITHUB_TOKEN"]
+    env:
+      - "DOCKER_BUILDKIT=1"
+
+  # Push branch tag
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "push"
+      - "gcr.io/$PROJECT_ID/hodlbonds-trading-api:$BRANCH_NAME"
+
+  # Push commit-specific tag
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "push"
+      - "gcr.io/$PROJECT_ID/hodlbonds-trading-api:$BRANCH_NAME-$SHORT_SHA"
+
+  # Deploy to Cloud Run
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      - "run"
+      - "deploy"
+      - "hodlbonds-trading-api-$BRANCH_NAME"
+      - "--image=gcr.io/$PROJECT_ID/hodlbonds-trading-api:$BRANCH_NAME-$SHORT_SHA"
+      - "--region=us-central1"
+      - "--platform=managed"
+      - "--allow-unauthenticated"
+      - "--port=8080"
+      - "--memory=256Mi"
+      - "--cpu=1"
+      - "--min-instances=0"
+      - "--max-instances=3"
+      - "--service-account=hodlbonds-trading-api@$PROJECT_ID.iam.gserviceaccount.com"
+      # Cloud SQL connection (connector uses this via API, not Unix socket)
+      - "--add-cloudsql-instances=$PROJECT_ID:us-central1:hodlbonds-api"
+      # Environment variables for Cloud SQL Connector with IAM auth
+      - "--set-env-vars=CLOUD_SQL_INSTANCE=$PROJECT_ID:us-central1:hodlbonds-api"
+      - "--set-env-vars=DB_IAM_USER=hodlbonds-trading-api@$PROJECT_ID.iam"
+      - "--set-env-vars=DB_NAME=hodlbonds_api_$BRANCH_NAME"
+      - "--set-env-vars=DB_POOL_MAX=5"
+      - "--set-env-vars=PUBSUB_SERVICE_ACCOUNT_EMAIL=hodlbonds-trading-api@$PROJECT_ID.iam.gserviceaccount.com"
+      # Secrets from Secret Manager (branch-specific)
+      - "--set-secrets=API_KEYS=trading-api-keys-$BRANCH_NAME:latest"
+      - "--set-secrets=EXECUTOR_PUBSUB_TOPIC=trading-api-executor-pubsub-topic-$BRANCH_NAME:latest"
+      - "--set-secrets=EXECUTOR_ADDRESSES=trading-api-executor-addresses-$BRANCH_NAME:latest"
+      - "--set-secrets=SERVICE_URL=trading-api-service-url-$BRANCH_NAME:latest"
+      # Startup configuration
+      - "--cpu-boost"
+      - "--startup-probe=httpGet.path=/health,periodSeconds=10,failureThreshold=3"
+
+# Secrets available during build (for GitHub Package Registry auth)
+availableSecrets:
+  secretManager:
+    - versionName: projects/$PROJECT_ID/secrets/github-npm-token/versions/latest
+      env: "GITHUB_TOKEN"
+
+# Images to store in Container Registry
+images:
+  - "gcr.io/$PROJECT_ID/hodlbonds-trading-api:$BRANCH_NAME"
+  - "gcr.io/$PROJECT_ID/hodlbonds-trading-api:$BRANCH_NAME-$SHORT_SHA"
+
+timeout: "1200s"
+
+# Service account for Cloud Build to run as (needs permissions to push images, deploy to Cloud Run)
+serviceAccount: "projects/$PROJECT_ID/serviceAccounts/hodlbonds-api-deployer@$PROJECT_ID.iam.gserviceaccount.com"
+
+options:
+  logging: CLOUD_LOGGING_ONLY

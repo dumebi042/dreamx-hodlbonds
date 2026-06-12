@@ -1,0 +1,72 @@
+# Testnet chains for stage environment
+
+services:
+  # Ethereum Sepolia Testnet
+  executor-eth-sepolia:
+    image: gcr.io/${GCP_PROJECT_ID}/blockchain-executor:stage
+    container_name: executor-eth-sepolia
+    restart: unless-stopped
+    stop_grace_period: 90s
+    depends_on:
+      cloud-sql-proxy:
+        condition: service_healthy
+    environment:
+      ENVIRONMENT: stage
+      DATABASE_NAME: blockchain_executor_stage
+      DATABASE_URL: postgres://hodlbonds-executor@${GCP_PROJECT_ID}.iam@cloud-sql-proxy:5432/blockchain_executor_stage
+      BLOCKCHAIN_EXECUTOR_CONFIG: /app/config/config.json
+      SEED_PHRASE_SECRET: executor-seed-phrase
+      GCP_PROJECT_ID: ${GCP_PROJECT_ID}
+      TRADING_API_STATUS_TOPIC: ${TRADING_API_STATUS_TOPIC_BASE}-stage
+      NODE_ENV: production
+      LOG_LEVEL: info
+    volumes:
+      - ./configs/eth-sepolia-${DEPLOYMENT_REGION}.json:/app/config/config.json:ro
+    labels:
+      service: "executor"
+      environment: "stage"
+      chain: "eth-sepolia"
+      region: "${DEPLOYMENT_REGION}"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "2"
+        compress: "true"
+        mode: "non-blocking"
+        max-buffer-size: "4m"
+
+  # Avalanche Fuji Testnet
+  executor-avalanche-fuji:
+    image: gcr.io/${GCP_PROJECT_ID}/blockchain-executor:stage
+    container_name: executor-avalanche-fuji
+    restart: unless-stopped
+    stop_grace_period: 90s
+    depends_on:
+      cloud-sql-proxy:
+        condition: service_healthy
+    environment:
+      ENVIRONMENT: stage
+      DATABASE_NAME: blockchain_executor_stage
+      DATABASE_URL: postgres://hodlbonds-executor@${GCP_PROJECT_ID}.iam@cloud-sql-proxy:5432/blockchain_executor_stage
+      BLOCKCHAIN_EXECUTOR_CONFIG: /app/config/config.json
+      SEED_PHRASE_SECRET: executor-seed-phrase
+      GCP_PROJECT_ID: ${GCP_PROJECT_ID}
+      TRADING_API_STATUS_TOPIC: ${TRADING_API_STATUS_TOPIC_BASE}-stage
+      NODE_ENV: production
+      LOG_LEVEL: info
+    volumes:
+      - ./configs/avalanche-fuji-${DEPLOYMENT_REGION}.json:/app/config/config.json:ro
+    labels:
+      service: "executor"
+      environment: "stage"
+      chain: "avalanche-fuji"
+      region: "${DEPLOYMENT_REGION}"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "2"
+        compress: "true"
+        mode: "non-blocking"
+        max-buffer-size: "4m"

@@ -1,0 +1,46 @@
+{
+  "name": "hodlbonds-blockchain-executor",
+  "version": "0.4.0",
+  "description": "",
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "build": "pnpm -r build",
+    "build:packages": "pnpm -r --filter './packages/*' build",
+    "format": "pnpm -r format",
+    "lint": "pnpm -r lint",
+    "precommit": "pnpm format && pnpm lint && pnpm type-check && pnpm test --run",
+    "test": "vitest --coverage",
+    "type-check": "pnpm -r type-check",
+    "version:patch": "node scripts/bump-version.mjs patch",
+    "version:minor": "node scripts/bump-version.mjs minor",
+    "version:major": "node scripts/bump-version.mjs major",
+    "publish:packages": "pnpm -r --filter './packages/*' publish",
+    "db:start": "docker compose -f packages/database/docker/docker-compose.yml up -d",
+    "db:stop": "docker compose -f packages/database/docker/docker-compose.yml down",
+    "db:reset": "docker compose -f packages/database/docker/docker-compose.yml down -v && docker compose -f packages/database/docker/docker-compose.yml up -d",
+    "db:logs": "docker compose -f packages/database/docker/docker-compose.yml logs -f db",
+    "migrate": "pnpm --filter @dreamx-development/hodlbonds-blockchain-executor-database migrate",
+    "dev": "pnpm db:start && pnpm -r --parallel dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^24.10.13",
+    "@vitest/coverage-v8": "^4.0.18",
+    "oxfmt": "^0.31.0",
+    "oxlint": "^1.46.0",
+    "tinyglobby": "^0.2.15",
+    "tsdown": "^0.20.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vite-tsconfig-paths": "^6.1.0",
+    "vitest": "^4.0.18"
+  },
+  "packageManager": "pnpm@10.27.0+sha512.72d699da16b1179c14ba9e64dc71c9a40988cbdc65c264cb0e489db7de917f20dcf4d64d8723625f2969ba52d4b7e2a1170682d9ac2a5dcaeaab732b7e16f04a"
+}
