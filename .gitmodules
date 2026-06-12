@@ -1,0 +1,12 @@
+[submodule "dreamx-hodl-bonds-contracts/lib/v4-core"]
+	path = dreamx-hodl-bonds-contracts/lib/v4-core
+	url = https://github.com/uniswap/v4-core
+[submodule "dreamx-hodl-bonds-contracts/lib/v4-periphery"]
+	path = dreamx-hodl-bonds-contracts/lib/v4-periphery
+	url = https://github.com/uniswap/v4-periphery
+[submodule "dreamx-hodl-bonds-contracts/lib/permit2"]
+	path = dreamx-hodl-bonds-contracts/lib/permit2
+	url = https://github.com/uniswap/permit2
+[submodule "dreamx-hodl-bonds-contracts/lib/universal-router"]
+	path = dreamx-hodl-bonds-contracts/lib/universal-router
+	url = https://github.com/uniswap/universal-router
